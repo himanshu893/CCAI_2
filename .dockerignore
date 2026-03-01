@@ -1,0 +1,11 @@
+target/
+.git/
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+build_log.txt
+build_log2.txt
+.gitignore
+.gitattributes
