@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyLock — Cloud Dashboard</title>
+    <meta name="description" content="SkyLock Cloud Storage — Manage your files securely.">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <!-- ─── Frosted Sidebar ─────────────────────────── -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">S</div>
+                <div class="brand-info">
+                    <h2>SkyLock</h2>
+                    <span>Pro Workspace</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-nav="home">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item" data-nav="projects">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Projects</span>
+                </button>
+                <button class="nav-item" data-nav="documents">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <span>Documents</span>
+                </button>
+                <button class="nav-item" data-nav="shared">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                    </svg>
+                    <span>Shared</span>
+                </button>
+                <button class="nav-item" data-nav="starred">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                    <span>Starred</span>
+                </button>
+                <button class="nav-item" data-nav="trash">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    <span>Trash</span>
+                </button>
+            </nav>
+
+            <!-- Storage Widget -->
+            <div class="storage-widget">
+                <button class="upload-btn" id="upload-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>New Upload</span>
+                </button>
+                <button class="new-folder-btn" id="new-folder-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                        <line x1="12" y1="11" x2="12" y2="17" />
+                        <line x1="9" y1="14" x2="15" y2="14" />
+                    </svg>
+                    <span>New Folder</span>
+                </button>
+                <div class="storage-info">
+                    <div class="storage-ring">
+                        <svg viewBox="0 0 40 40">
+                            <circle class="storage-ring-bg" cx="20" cy="20" r="17" />
+                            <circle class="storage-ring-fill" id="ring-fill" cx="20" cy="20" r="17" />
+                        </svg>
+                        <div class="storage-ring-text" id="ring-text">0%</div>
+                    </div>
+                    <div class="storage-detail">
+                        <h4>Storage</h4>
+                        <p id="storage-used">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ─── Main Content ────────────────────────────── -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <nav class="breadcrumbs" id="breadcrumbs">
+                    <a href="javascript:void(0)" onclick="window.skylock.goToRoot()">Home</a>
+                    <span class="sep">/</span>
+                    <span class="current">My Files</span>
+                </nav>
+
+                <div class="top-bar-actions">
+                    <div class="search-bar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" placeholder="Search files, folders, or tags...">
+                    </div>
+
+                    <div class="user-menu">
+                        <button class="avatar-btn" id="avatar-btn"
+                            th:text="${#strings.toUpperCase(#strings.substring(username, 0, 1))}">U</button>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <div class="user-dropdown-header">
+                                <strong th:text="${username}">User</strong>
+                                <span>Pro Plan</span>
+                            </div>
+                            <a href="/logout">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Header -->
+            <div class="content-header">
+                <h1>Final Assets</h1>
+                <div class="view-controls">
+                    <button class="view-btn" title="Filter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                        </svg>
+                    </button>
+                    <button class="view-btn active" title="Grid View">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Asset Grid -->
+            <div class="grid-scroll">
+                <div class="asset-grid" id="asset-grid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </main>
+
+        <!-- ─── File Inspector Panel ────────────────────── -->
+        <aside class="inspector-panel" id="inspector-panel">
+            <div class="inspector-inner">
+                <div class="inspector-header">
+                    <h2>File Inspector</h2>
+                    <button class="close-inspector" onclick="skylock.closeInspector()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Preview -->
+                <div class="preview-box" id="inspector-preview">
+                    <span class="neon-icon">📎</span>
+                </div>
+
+                <!-- File name -->
+                <h3 class="file-name" id="inspector-filename">Select a file</h3>
+
+                <!-- Tags -->
+                <div class="tag-row" id="inspector-tags">
+                    <span class="tag design">FILE</span>
+                </div>
+
+                <!-- Metadata -->
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <label>Type</label>
+                        <span id="inspector-type">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Size</label>
+                        <span id="inspector-size">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Created</label>
+                        <span id="inspector-created">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Owner</label>
+                        <span th:text="${username}">User</span>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="activity-feed">
+                    <h3>Activity Feed</h3>
+                    <div class="activity-item">
+                        <div class="activity-icon upload">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14"
+                                height="14">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                        </div>
+                        <div class="activity-text">
+                            <strong th:text="${username} + ' uploaded file'">User uploaded file</strong>
+                            <span>Recently</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="inspector-actions">
+                    <button class="btn-download" id="btn-download">Download</button>
+                    <button class="btn-share">Share</button>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ─── Upload Modal ────────────────────────────────── -->
+    <div class="modal-overlay" id="upload-modal">
+        <div class="modal-content">
+            <h2>Upload File</h2>
+            <div class="drop-zone" id="drop-zone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <p>Drag & drop your file here, or <span>browse</span></p>
+            </div>
+            <input type="file" id="file-input" style="display: none;">
+            <div class="selected-file-name" id="selected-file-name"></div>
+            <div class="upload-progress" id="upload-progress">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-upload">Cancel</button>
+                <button class="btn-upload-confirm" id="confirm-upload">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── New Folder Modal ──────────────────────────────── -->
+    <div class="modal-overlay" id="folder-modal">
+        <div class="modal-content">
+            <h2>Create New Folder</h2>
+            <div class="folder-name-input">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+                <input type="text" id="folder-name-input" placeholder="Enter folder name..." autocomplete="off">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-folder">Cancel</button>
+                <button class="btn-upload-confirm" id="confirm-folder">Create Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
